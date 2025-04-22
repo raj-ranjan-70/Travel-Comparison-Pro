@@ -2,7 +2,7 @@
 
 An AI-powered chatbot designed to connect travelers with like-minded companions and provide personalized travel suggestions. Whether you're planning a solo trip or looking to join others on an adventure, this chatbot helps you find, chat, and plan smarter.
 
-🔗 **GitHub Repository:** [Travel Companion Chatbot](https://github.com/storm309/Chatbot)
+🔗 **GitHub Repository:** [Travel Companion Chatbot](https://github.com/raj-ranjan-70/Travel-Comparison-Pro)
 
 ## ✨ Features
 

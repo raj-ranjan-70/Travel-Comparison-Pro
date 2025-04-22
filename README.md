@@ -1,6 +1,8 @@
-# 🌍 Travel-Comparison-Pro Chatbot 🤖
+# Travel Comparison Pro 🌍✈️
 
 An AI-powered chatbot designed to connect travelers with like-minded companions and provide personalized travel suggestions. Whether you're planning a solo trip or looking to join others on an adventure, this chatbot helps you find, chat, and plan smarter.
+
+Leveraging **Google Gemini 2.0 Flash AI API**, the chatbot delivers intelligent insights, making trip planning smarter and more convenient.
 
 🔗 **GitHub Repository:** [Travel Companion Chatbot](https://github.com/raj-ranjan-70/Travel-Comparison-Pro)
 
@@ -13,8 +15,11 @@ An AI-powered chatbot designed to connect travelers with like-minded companions 
 - 📆 **Trip Planner (Optional):** Organize your itinerary and share it with companions.
 - 🔒 **Secure & Simple:** Easy-to-use with user privacy in mind.
 
-## 🚀 Tech Stack
 
-- **Frontend:** HTML, CSS, JavaScript
-- **AI Integration:** Gemini API (Google's Generative AI)
-- **Others:** Tesseract.js (if OCR is involved), local storage or database for matches
+## Technology Stack 🛠️
+- **Frontend**: HTML, CSS, JavaScript (for UI & interactions)
+- **AI Integration**: Google Gemini 2.0 Flash AI API (for intelligent travel comparisons & responses)
+
+---
+
+Made with ❤️ for passionate travelers! 🚀🌎

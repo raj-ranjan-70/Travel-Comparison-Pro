@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Comparison Pro</title>
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-color: #2c3e50;
+            --bg-color: #f5f7fa;
+            --border-color: #d1d5db;
+            --card-bg: white;
+            --error-color: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 24px;
+            margin-right: 15px;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-color);
+            flex-grow: 1;
+            min-width: 200px;
+        }
+
+        .settings-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .settings-btn:hover {
+            background-color: #e5e7eb;
+        }
+
+        /* Main Content Layout */
+        .content {
+            display: flex;
+            gap: 20px;
+            flex-direction: column;
+        }
+
+        @media (min-width: 768px) {
+            .content {
+                flex-direction: row;
+            }
+        }
+
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        .right-panel {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Form Elements */
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-direction: column;
+        }
+
+        @media (min-width: 480px) {
+            .input-group {
+                flex-direction: row;
+            }
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            height: 40px;
+            box-sizing: border-box;
+            min-width: 0;
+            width: 100%;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @media (min-width: 480px) {
+            button {
+                width: auto;
+            }
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* History List */
+        .history-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .history-item:nth-child(odd) {
+            background-color: #f9fafb;
+        }
+
+        .history-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .history-item.hidden {
+            display: none;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-direction: column;
+        }
+
+        @media (min-width: 480px) {
+            .history-actions {
+                flex-direction: row;
+            }
+        }
+
+        /* Results Area */
+        .results-area {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            background-color: var(--card-bg);
+            min-height: 500px;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .results-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        @media (min-width: 600px) {
+            .results-actions {
+                flex-direction: row;
+            }
+        }
+
+        .results-actions .right {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        @media (min-width: 480px) {
+            .results-actions .right {
+                flex-direction: row;
+            }
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: -1px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background-color: #e5e7eb;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            display: inline-block;
+        }
+
+        .tab.active {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+            display: none;
+            width: 100%;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+        }
+
+        /* Chatbot Styles */
+        .chat-display {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            background-color: var(--card-bg);
+            height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .chat-message {
+            margin: 10px 0;
+            word-break: break-word;
+        }
+
+        .chat-message .sender {
+            font-weight: bold;
+        }
+
+        .chat-message .timestamp {
+            color: #6b7280;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+
+        .user-message .sender {
+            color: #10b981;
+        }
+
+        .assistant-message .sender {
+            color: #3b82f6;
+        }
+
+        .thinking-message {
+            color: #666;
+            font-style: italic;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+            flex-direction: column;
+        }
+
+        @media (min-width: 480px) {
+            .chat-input {
+                flex-direction: row;
+            }
+        }
+
+        .chat-input input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sample-questions {
+            margin-bottom: 15px;
+        }
+
+        .question-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .question-btn {
+            background-color: #e5e7eb;
+            color: var(--text-color);
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .question-btn:hover {
+            background-color: #d1d5db;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        /* Form Elements in Modal */
+        select, .checkbox-group {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .checkbox-group {
+            padding: 10px;
+        }
+
+        /* Error Message */
+        .error-message {
+            color: var(--error-color);
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        /* Comparison Result Styles */
+        .comparison-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            word-break: break-word;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            overflow-x: auto;
+            display: block;
+        }
+
+        @media (min-width: 600px) {
+            .comparison-table {
+                display: table;
+            }
+        }
+
+        .comparison-table th {
+            background-color: #3498db;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .comparison-table td {
+            padding: 8px 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .highlight {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            word-break: break-word;
+        }
+
+        .category {
+            font-weight: bold;
+            color: #e74c3c;
+            margin-top: 20px;
+            word-break: break-word;
+        }
+
+        .verdict {
+            background-color: #eaf7fd;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 15px 0;
+            word-break: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo">✈️</div>
+            <div class="title">Travel Comparison Pro</div>
+            <button class="settings-btn" id="settingsBtn">⚙️</button>
+        </div>
+
+        <!-- Main Content -->
+        <div class="content">
+            <!-- Left Panel -->
+            <div class="left-panel">
+                <!-- Comparison Card -->
+                <div class="card">
+                    <div class="card-title">🌍 Destination Comparison</div>
+                    <div class="input-group">
+                        <input type="text" id="city1Input" placeholder="Enter first destination (e.g., Paris)">
+                        <input type="text" id="city2Input" placeholder="Enter second destination (e.g., Tokyo)">
+                    </div>
+                    <button id="compareBtn">Compare Destinations</button>
+                </div>
+
+                <!-- History Card -->
+                <div class="card">
+                    <div class="card-title">🕒 Comparison History</div>
+                    <input type="text" id="searchHistory" placeholder="Search history...">
+                    <ul class="history-list" id="historyList"></ul>
+                    <div class="history-actions">
+                        <button id="clearHistoryBtn">Clear All</button>
+                        <button id="exportHistoryBtn">Export History</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <div class="tab active" data-tab="results">Comparison Results</div>
+                    <div class="tab" data-tab="chatbot">Travel Assistant</div>
+                </div>
+
+                <!-- Tab Contents -->
+                <div class="tab-content active" id="resultsTab">
+                    <div class="results-area" id="outputArea"></div>
+                    <div class="results-actions">
+                        <button id="mapBtn" disabled>View on Map</button>
+                        <div class="right">
+                            <button id="savePdfBtn" disabled>Save as PDF</button>
+                            <button id="saveHtmlBtn" disabled>Save as HTML</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="chatbotTab">
+                    <div class="chat-display" id="chatDisplay"></div>
+                    <div class="sample-questions">
+                        <div class="card-title">Quick Questions</div>
+                        <div class="question-buttons">
+                            <button class="question-btn" data-question="Best time to visit Paris?">Best time to visit Paris?</button>
+                            <button class="question-btn" data-question="Packing list for beach vacation?">Packing list for beach vacation?</button>
+                            <button class="question-btn" data-question="How to save on flights?">How to save on flights?</button>
+                            <button class="question-btn" data-question="Solo travel tips">Solo travel tips</button>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="userInput" placeholder="Ask me anything about travel...">
+                        <button id="sendBtn">Send</button>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <div class="modal-title">Settings</div>
+            
+            <div class="card">
+                <div class="card-title">Appearance</div>
+                <label for="themeSelect">Select Theme:</label>
+                <select id="themeSelect">
+                    <option value="light">Light Theme</option>
+                    <option value="dark">Dark Theme</option>
+                    <option value="blue">Blue Theme</option>
+                </select>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">Preferences</div>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoSaveCheck">
+                    <label for="autoSaveCheck">Auto-save comparisons</label>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button id="cancelSettingsBtn">Cancel</button>
+                <button id="saveSettingsBtn">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div class="modal" id="errorModal">
+        <div class="modal-content">
+            <div class="modal-title">Error</div>
+            <div id="errorMessage"></div>
+            <div class="modal-actions">
+                <button id="closeErrorBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <div class="modal-title">Confirm</div>
+            <div id="confirmMessage"></div>
+            <div class="modal-actions">
+                <button id="confirmCancelBtn">Cancel</button>
+                <button id="confirmOkBtn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const elements = {
+            settingsBtn: document.getElementById('settingsBtn'),
+            city1Input: document.getElementById('city1Input'),
+            city2Input: document.getElementById('city2Input'),
+            compareBtn: document.getElementById('compareBtn'),
+            searchHistory: document.getElementById('searchHistory'),
+            historyList: document.getElementById('historyList'),
+            clearHistoryBtn: document.getElementById('clearHistoryBtn'),
+            exportHistoryBtn: document.getElementById('exportHistoryBtn'),
+            outputArea: document.getElementById('outputArea'),
+            mapBtn: document.getElementById('mapBtn'),
+            savePdfBtn: document.getElementById('savePdfBtn'),
+            saveHtmlBtn: document.getElementById('saveHtmlBtn'),
+            progressBar: document.getElementById('progressBar'),
+            progressBarFill: document.getElementById('progressBarFill'),
+            tabs: document.querySelectorAll('.tab'),
+            tabContents: document.querySelectorAll('.tab-content'),
+            chatDisplay: document.getElementById('chatDisplay'),
+            userInput: document.getElementById('userInput'),
+            sendBtn: document.getElementById('sendBtn'),
+            questionBtns: document.querySelectorAll('.question-btn'),
+            settingsModal: document.getElementById('settingsModal'),
+            themeSelect: document.getElementById('themeSelect'),
+            autoSaveCheck: document.getElementById('autoSaveCheck'),
+            saveSettingsBtn: document.getElementById('saveSettingsBtn'),
+            cancelSettingsBtn: document.getElementById('cancelSettingsBtn'),
+            errorModal: document.getElementById('errorModal'),
+            errorMessage: document.getElementById('errorMessage'),
+            closeErrorBtn: document.getElementById('closeErrorBtn'),
+            confirmModal: document.getElementById('confirmModal'),
+            confirmMessage: document.getElementById('confirmMessage'),
+            confirmCancelBtn: document.getElementById('confirmCancelBtn'),
+            confirmOkBtn: document.getElementById('confirmOkBtn')
+        };
+
+        // App State
+        const state = {
+            currentTheme: 'light',
+            history: {},
+            currentComparison: null,
+            thinkingMessageId: null,
+            apiKey: 'AIzaSyCt51wC4nFdi8oTPwKszR1xVh2mc4UoqV0' // Replace with your actual API key
+        };
+
+        // Initialize the app
+        function init() {
+            loadHistory();
+            setupEventListeners();
+            addChatMessage('Travel Assistant', 'Hello! I\'m your travel assistant. How can I help you today?');
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Comparison functionality
+            elements.compareBtn.addEventListener('click', compareDestinations);
+            
+            // History functionality
+            elements.searchHistory.addEventListener('input', filterHistory);
+            elements.historyList.addEventListener('click', loadFromHistory);
+            elements.clearHistoryBtn.addEventListener('click', confirmClearHistory);
+            elements.exportHistoryBtn.addEventListener('click', exportHistory);
+            
+            // Results actions
+            elements.mapBtn.addEventListener('click', openMap);
+            elements.savePdfBtn.addEventListener('click', saveAsPdf);
+            elements.saveHtmlBtn.addEventListener('click', saveAsHtml);
+            
+            // Tabs
+            elements.tabs.forEach(tab => {
+                tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+            });
+            
+            // Chatbot functionality
+            elements.sendBtn.addEventListener('click', sendChatMessage);
+            elements.userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendChatMessage();
+            });
+            
+            elements.questionBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    elements.userInput.value = btn.dataset.question;
+                    elements.userInput.focus();
+                });
+            });
+            
+            // Settings modal
+            elements.settingsBtn.addEventListener('click', showSettings);
+            elements.saveSettingsBtn.addEventListener('click', saveSettings);
+            elements.cancelSettingsBtn.addEventListener('click', () => {
+                elements.settingsModal.style.display = 'none';
+            });
+            
+            // Error modal
+            elements.closeErrorBtn.addEventListener('click', () => {
+                elements.errorModal.style.display = 'none';
+            });
+            
+            // Confirm modal
+            elements.confirmCancelBtn.addEventListener('click', () => {
+                elements.confirmModal.style.display = 'none';
+            });
+        }
+
+        // Tab switching
+        function switchTab(tabId) {
+            elements.tabs.forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabId);
+            });
+            
+            elements.tabContents.forEach(content => {
+                content.classList.toggle('active', content.id === `${tabId}Tab`);
+            });
+        }
+
+        // Comparison functionality
+        async function compareDestinations() {
+            const city1 = elements.city1Input.value.trim();
+            const city2 = elements.city2Input.value.trim();
+            
+            if (!city1 || !city2) {
+                showError('Please enter both destinations.');
+                return;
+            }
+            
+            // Disable UI during operation
+            elements.compareBtn.disabled = true;
+            elements.progressBar.style.display = 'block';
+            animateProgressBar();
+            elements.outputArea.innerHTML = '';
+            
+            try {
+                const result = await fetchGeminiResponse(
+                    `Compare ${city1} and ${city2} as travel destinations. Include information about: 
+                    1. General overview
+                    2. Best time to visit
+                    3. Cost comparison (accommodation, food, transportation)
+                    4. Top attractions
+                    5. Cultural highlights
+                    6. Final verdict on which might be better for different types of travelers
+                    Format the response in clear sections with headings.`
+                );
+                onComparisonComplete(result, city1, city2);
+            } catch (error) {
+                onComparisonError(error.message);
+            }
+        }
+
+        async function fetchGeminiResponse(prompt) {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${state.apiKey}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: prompt
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error?.message || 'Failed to fetch response from Gemini API');
+                }
+
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error('Error fetching from Gemini API:', error);
+                throw error;
+            }
+        }
+
+        function onComparisonComplete(result, city1, city2) {
+            elements.progressBar.style.display = 'none';
+            elements.compareBtn.disabled = false;
+            
+            // Format and display result
+            const formattedResult = formatResult(result, city1, city2);
+            elements.outputArea.innerHTML = formattedResult;
+            
+            // Enable export buttons
+            elements.mapBtn.disabled = false;
+            elements.savePdfBtn.disabled = false;
+            elements.saveHtmlBtn.disabled = false;
+            
+            // Save to history
+            const timestamp = new Date().toLocaleString();
+            const entry = `${city1} vs ${city2} (${timestamp})`;
+            saveToHistory(entry, formattedResult, city1, city2);
+            
+            // Add to history list
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            li.textContent = entry;
+            li.dataset.entry = entry;
+            elements.historyList.insertBefore(li, elements.historyList.firstChild);
+            
+            // Store current comparison
+            state.currentComparison = { city1, city2, result: formattedResult };
+        }
+
+        function onComparisonError(errorMsg) {
+            elements.progressBar.style.display = 'none';
+            elements.compareBtn.disabled = false;
+            showError(`Comparison failed:\n${errorMsg}`);
+        }
+
+        function animateProgressBar() {
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                } else {
+                    width += 5;
+                    elements.progressBarFill.style.width = `${width}%`;
+                }
+            }, 100);
+        }
+
+        function formatResult(result, city1, city2) {
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString() + ' at ' + now.toLocaleTimeString();
+            
+            let html = `
+                <h1 class="comparison-title">Travel Comparison: ${city1} vs ${city2}</h1>
+                <p><i>Generated on ${formattedDate}</i></p>
+            `;
+            
+            // Parse the result into sections
+            const sections = result.split('\n\n');
+            for (const section of sections) {
+                if (!section.trim()) continue;
+                    
+                if (section.includes(':')) {  // Key-value pairs
+                    html += `<table class="comparison-table"><tbody>`;
+                    for (const line of section.split('\n')) {
+                        if (line.includes(':')) {
+                            const [key, ...valueParts] = line.split(':');
+                            const value = valueParts.join(':').trim();
+                            html += `
+                            <tr>
+                                <td width="30%"><strong>${key.trim()}</strong></td>
+                                <td>${value}</td>
+                            </tr>
+                            `;
+                        }
+                    }
+                    html += `</tbody></table>`;
+                } else {  // Regular text
+                    html += `<div class="highlight">${section.trim()}</div>`;
+                }
+            }
+            
+            return html;
+        }
+
+        // History functionality
+        function saveToHistory(title, resultHtml, city1, city2) {
+            state.history[title] = {
+                html: resultHtml,
+                cities: [city1, city2],
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('travelHistory', JSON.stringify(state.history));
+        }
+
+        function loadHistory() {
+            const savedHistory = localStorage.getItem('travelHistory');
+            if (savedHistory) {
+                state.history = JSON.parse(savedHistory);
+                
+                // Sort by timestamp (newest first)
+                const sortedEntries = Object.keys(state.history).sort((a, b) => {
+                    return new Date(state.history[b].timestamp) - new Date(state.history[a].timestamp);
+                });
+                
+                // Populate history list
+                sortedEntries.forEach(entry => {
+                    const li = document.createElement('li');
+                    li.className = 'history-item';
+                    li.textContent = entry;
+                    li.dataset.entry = entry;
+                    elements.historyList.appendChild(li);
+                });
+            }
+        }
+
+        function loadFromHistory(e) {
+            const item = e.target.closest('.history-item');
+            if (item) {
+                const entry = state.history[item.dataset.entry];
+                if (entry) {
+                    elements.outputArea.innerHTML = entry.html;
+                    elements.city1Input.value = entry.cities[0];
+                    elements.city2Input.value = entry.cities[1];
+                    elements.mapBtn.disabled = false;
+                    elements.savePdfBtn.disabled = false;
+                    elements.saveHtmlBtn.disabled = false;
+                    
+                    // Store current comparison
+                    state.currentComparison = { 
+                        city1: entry.cities[0], 
+                        city2: entry.cities[1], 
+                        result: entry.html 
+                    };
+                    
+                    // Switch to results tab
+                    switchTab('results');
+                }
+            }
+        }
+
+        function filterHistory() {
+            const searchText = elements.searchHistory.value.toLowerCase();
+            const items = elements.historyList.querySelectorAll('.history-item');
+            
+            items.forEach(item => {
+                item.classList.toggle('hidden', 
+                    searchText && !item.textContent.toLowerCase().includes(searchText));
+            });
+        }
+
+        function confirmClearHistory() {
+            showConfirm(
+                'Clear History', 
+                'Are you sure you want to clear ALL history?',
+                clearHistory
+            );
+        }
+
+        function clearHistory() {
+            state.history = {};
+            localStorage.removeItem('travelHistory');
+            elements.historyList.innerHTML = '';
+        }
+
+        function exportHistory() {
+            // In a real app, this would create a file download
+            // For this demo, we'll just show the JSON in an alert
+            const historyStr = JSON.stringify(state.history, null, 2);
+            alert(`History would be exported as:\n\n${historyStr}`);
+        }
+
+        // Results actions
+        function openMap() {
+            if (!state.currentComparison) return;
+            
+            const { city1, city2 } = state.currentComparison;
+            if (city1 && city2) {
+                const url = `https://www.google.com/maps/dir/${encodeURIComponent(city1)}/${encodeURIComponent(city2)}`;
+                window.open(url, '_blank');
+            }
+        }
+
+        function saveAsPdf() {
+            // In a real app, this would generate and download a PDF
+            // For this demo, we'll just show a message
+            alert('PDF would be saved with the current comparison results.');
+        }
+
+        function saveAsHtml() {
+            if (!state.currentComparison) return;
+            
+            const htmlContent = state.currentComparison.result;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Travel_Comparison_${new Date().toISOString().split('T')[0]}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Chatbot functionality
+        async function sendChatMessage() {
+            const message = elements.userInput.value.trim();
+            if (!message) return;
+            
+            // Add user message to chat
+            addChatMessage('You', message);
+            elements.userInput.value = '';
+            
+            // Show "thinking" message
+            const thinkingId = 'thinking-' + Date.now();
+            state.thinkingMessageId = thinkingId;
+            addChatMessage('Travel Assistant', 'Thinking...', true, thinkingId);
+            
+            try {
+                const response = await fetchGeminiResponse(
+                    `You are a travel assistant. Provide helpful, accurate information about travel destinations, 
+                    planning, packing, and other travel-related topics. Be concise but informative. 
+                    Answer the following question: ${message}`
+                );
+                
+                // Remove the "Thinking..." message
+                const thinkingElement = document.getElementById(thinkingId);
+                if (thinkingElement) {
+                    thinkingElement.remove();
+                }
+                
+                addChatMessage('Travel Assistant', response);
+            } catch (error) {
+                // Remove the "Thinking..." message
+                const thinkingElement = document.getElementById(thinkingId);
+                if (thinkingElement) {
+                    thinkingElement.remove();
+                }
+                
+                addChatMessage('Travel Assistant', 'Sorry, I encountered an error. Please try again later.');
+                console.error('Error fetching chat response:', error);
+            }
+        }
+
+        function addChatMessage(sender, message, isThinking = false, id = null) {
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            const messageDiv = document.createElement('div');
+            if (id) messageDiv.id = id;
+            messageDiv.className = `chat-message ${sender === 'You' ? 'user-message' : 'assistant-message'} ${isThinking ? 'thinking-message' : ''}`;
+            
+            messageDiv.innerHTML = `
+                <div class="sender">${sender}</div>
+                <span class="timestamp">(${timestamp})</span>
+                <div class="message-content">${message}</div>
+            `;
+            
+            elements.chatDisplay.appendChild(messageDiv);
+            elements.chatDisplay.scrollTop = elements.chatDisplay.scrollHeight;
+        }
+
+        // Settings functionality
+        function showSettings() {
+            // Load current settings
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            const autoSave = localStorage.getItem('autoSave') === 'true';
+            
+            elements.themeSelect.value = savedTheme;
+            elements.autoSaveCheck.checked = autoSave;
+            
+            elements.settingsModal.style.display = 'flex';
+        }
+
+        function saveSettings() {
+            const theme = elements.themeSelect.value;
+            const autoSave = elements.autoSaveCheck.checked;
+            
+            // Save settings
+            localStorage.setItem('theme', theme);
+            localStorage.setItem('autoSave', autoSave);
+            
+            // Apply theme
+            applyTheme(theme);
+            
+            elements.settingsModal.style.display = 'none';
+        }
+
+        function applyTheme(theme) {
+            document.documentElement.style.setProperty('--bg-color', 
+                theme === 'dark' ? '#1f2937' : 
+                theme === 'blue' ? '#eff6ff' : '#f5f7fa');
+            
+            document.documentElement.style.setProperty('--card-bg', 
+                theme === 'dark' ? '#111827' : 'white');
+            
+            document.documentElement.style.setProperty('--text-color', 
+                theme === 'dark' ? '#f3f4f6' : 
+                theme === 'blue' ? '#1e3a8a' : '#2c3e50');
+            
+            document.documentElement.style.setProperty('--border-color', 
+                theme === 'dark' ? '#374151' : 
+                theme === 'blue' ? '#bfdbfe' : '#d1d5db');
+        }
+
+        // Modal helpers
+        function showError(message) {
+            elements.errorMessage.textContent = message;
+            elements.errorModal.style.display = 'flex';
+        }
+
+        function showConfirm(title, message, callback) {
+            elements.confirmMessage.textContent = message;
+            elements.confirmModal.style.display = 'flex';
+            
+            // Set up one-time event listeners
+            const handler = () => {
+                elements.confirmModal.style.display = 'none';
+                callback();
+                elements.confirmOkBtn.removeEventListener('click', handler);
+            };
+            
+            elements.confirmOkBtn.addEventListener('click', handler, { once: true });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
